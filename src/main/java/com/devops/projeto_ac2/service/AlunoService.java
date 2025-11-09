@@ -33,10 +33,6 @@ public class AlunoService {
     public AlunoDTO concluirCurso(Long alunoId, AlunoConcluirDTO concluirDTO) {
         Aluno aluno = findAlunoById(alunoId);
 
-        if (aluno.isConcluiu()) {
-            throw new IllegalStateException("aluno " + alunoId + " ja concluiu o curso");
-        }
-
         aluno.setConcluiu(true);
         aluno.setMediaFinal(concluirDTO.getMediaFinal());
 
