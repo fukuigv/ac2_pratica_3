@@ -166,7 +166,7 @@ class AlunoControllerIntegrationTest {
 //
 //        Map<String, Double> request = new HashMap<>();
 //        request.put("mediaFinal", 8.5);
-//        
+//
 //        // Act & Assert
 //        mockMvc.perform(patch("/api/alunos/" + salvo.getId() + "/concluir")
 //                .contentType(MediaType.APPLICATION_JSON)
