@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jdk
+FROM eclipse-temurin:21-jdk
 
 # Set the working directory in the container
 WORKDIR /ac2_ca
