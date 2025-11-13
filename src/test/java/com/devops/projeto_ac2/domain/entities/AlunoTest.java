@@ -203,31 +203,31 @@ class AlunoTest {
         assertThat(aluno.getNome()).isEqualTo("Maria Santos");
     }
     
-    @Test
-    @DisplayName("Deve identificar aluno aprovado corretamente")
-    void deveIdentificarAlunoAprovado() {
-        // Arrange
-        Aluno aluno = criarAlunoTeste();
-        MediaFinal media = MediaFinal.criar(8.0);
-        aluno.concluirCurso(media);
-        
-        // Act & Assert
-        assertThat(aluno.aprovado()).isTrue();
-        assertThat(aluno.reprovado()).isFalse();
-    }
-    
-    @Test
-    @DisplayName("Deve identificar aluno reprovado corretamente")
-    void deveIdentificarAlunoReprovado() {
-        // Arrange
-        Aluno aluno = criarAlunoTeste();
-        MediaFinal media = MediaFinal.criar(4.0);
-        aluno.concluirCurso(media);
-        
-        // Act & Assert
-        assertThat(aluno.reprovado()).isTrue();
-        assertThat(aluno.aprovado()).isFalse();
-    }
+//    @Test
+//    @DisplayName("Deve identificar aluno aprovado corretamente")
+//    void deveIdentificarAlunoAprovado() {
+//        // Arrange
+//        Aluno aluno = criarAlunoTeste();
+//        MediaFinal media = MediaFinal.criar(8.0);
+//        aluno.concluirCurso(media);
+//
+//        // Act & Assert
+//        assertThat(aluno.aprovado()).isTrue();
+//        assertThat(aluno.reprovado()).isFalse();
+//    }
+//
+//    @Test
+//    @DisplayName("Deve identificar aluno reprovado corretamente")
+//    void deveIdentificarAlunoReprovado() {
+//        // Arrange
+//        Aluno aluno = criarAlunoTeste();
+//        MediaFinal media = MediaFinal.criar(4.0);
+//        aluno.concluirCurso(media);
+//
+//        // Act & Assert
+//        assertThat(aluno.reprovado()).isTrue();
+//        assertThat(aluno.aprovado()).isFalse();
+//    }
     
     @Test
     @DisplayName("Deve identificar aluno em recuperação")

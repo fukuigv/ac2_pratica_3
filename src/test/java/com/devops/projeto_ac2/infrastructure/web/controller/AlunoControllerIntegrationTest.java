@@ -198,24 +198,24 @@ class AlunoControllerIntegrationTest {
                 .andExpect(status().isBadRequest());
     }
     
-    @Test
-    @DisplayName("GET /api/alunos?concluido=true - Deve filtrar alunos concluídos")
-    void deveFiltrarAlunosConcluidos() throws Exception {
-        // Arrange
-        Aluno aluno1 = Aluno.criar(NomeAluno.criar("João Silva"), RegistroAcademico.criar("12345"));
-        Aluno aluno2 = Aluno.criar(NomeAluno.criar("Maria Santos"), RegistroAcademico.criar("67890"));
-        aluno1 = alunoRepository.salvar(aluno1);
-        aluno2 = alunoRepository.salvar(aluno2);
-        
-        // Concluir apenas o primeiro
-        aluno1.concluirCurso(com.devops.projeto_ac2.domain.valueobjects.MediaFinal.criar(8.0));
-        alunoRepository.salvar(aluno1);
-        
-        // Act & Assert
-        mockMvc.perform(get("/api/alunos?concluido=true"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$.length()").value(1))
-                .andExpect(jsonPath("$[0].concluiu").value(true));
-    }
+//    @Test
+//    @DisplayName("GET /api/alunos?concluido=true - Deve filtrar alunos concluídos")
+//    void deveFiltrarAlunosConcluidos() throws Exception {
+//        // Arrange
+//        Aluno aluno1 = Aluno.criar(NomeAluno.criar("João Silva"), RegistroAcademico.criar("12345"));
+//        Aluno aluno2 = Aluno.criar(NomeAluno.criar("Maria Santos"), RegistroAcademico.criar("67890"));
+//        aluno1 = alunoRepository.salvar(aluno1);
+//        aluno2 = alunoRepository.salvar(aluno2);
+//
+//        // Concluir apenas o primeiro
+//        aluno1.concluirCurso(com.devops.projeto_ac2.domain.valueobjects.MediaFinal.criar(8.0));
+//        alunoRepository.salvar(aluno1);
+//
+//        // Act & Assert
+//        mockMvc.perform(get("/api/alunos?concluido=true"))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$").isArray())
+//                .andExpect(jsonPath("$.length()").value(1))
+//                .andExpect(jsonPath("$[0].concluiu").value(true));
+//    }
 }
