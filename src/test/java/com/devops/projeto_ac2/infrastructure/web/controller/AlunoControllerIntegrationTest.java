@@ -2,6 +2,7 @@ package com.devops.projeto_ac2.infrastructure.web.controller;
 
 import com.devops.projeto_ac2.domain.entities.Aluno;
 import com.devops.projeto_ac2.domain.repositories.AlunoRepository;
+import com.devops.projeto_ac2.domain.valueobjects.MediaFinal;
 import com.devops.projeto_ac2.domain.valueobjects.NomeAluno;
 import com.devops.projeto_ac2.domain.valueobjects.RegistroAcademico;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -154,29 +155,37 @@ class AlunoControllerIntegrationTest {
                 .andExpect(jsonPath("$.length()").value(2));
     }
     
-//    @Test
-//    @DisplayName("PATCH /api/alunos/{id}/concluir - Deve concluir curso com sucesso")
-//    void deveConcluirCursoComSucesso() throws Exception {
-//        // Arrange
-//        Aluno aluno = Aluno.criar(
-//                NomeAluno.criar("João Silva"),
-//                RegistroAcademico.criar("12345ABC")
-//        );
-//        Aluno salvo = alunoRepository.salvar(aluno);
-//
-//        Map<String, Double> request = new HashMap<>();
-//        request.put("mediaFinal", 8.5);
-//
-//        // Act & Assert
-//        mockMvc.perform(patch("/api/alunos/" + salvo.getId() + "/concluir")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(objectMapper.writeValueAsString(request)))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.concluiu").value(true))
-//                .andExpect(jsonPath("$.mediaFinal").value(8.5))
-//                .andExpect(jsonPath("$.cursosAdicionais").value(3))
-//                .andExpect(jsonPath("$.situacao").value("APROVADO"));
-//    }
+    @Test
+    @DisplayName("PATCH /api/alunos/{id}/concluir - Deve concluir curso com sucesso")
+    void deveConcluirCursoComSucesso() throws Exception {
+        // Arrange
+        Aluno aluno = Aluno.criar(
+                NomeAluno.criar("João Silva"),
+                RegistroAcademico.criar("12345ABC")
+        );
+        Aluno salvo = alunoRepository.salvar(aluno);
+
+        Map<String, Double> request = new HashMap<>();
+        request.put("nota", 8.5);
+
+        mockMvc.perform(post("/api/alunos/" + salvo.getId() + "/tentativas")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
+
+        Map<String, Double> concluirRequest = new HashMap<>();
+        concluirRequest.put("mediaFinal", 8.5);
+
+        // Act & Assert
+        mockMvc.perform(patch("/api/alunos/" + salvo.getId() + "/concluir")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(concluirRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.concluiu").value(true))
+                .andExpect(jsonPath("$.mediaFinal").value(8.5))
+                .andExpect(jsonPath("$.cursosAdicionais").value(3))
+                .andExpect(jsonPath("$.situacao").value("APROVADO"));
+    }
     
     @Test
     @DisplayName("PATCH /api/alunos/{id}/concluir - Deve validar média inválida")
@@ -198,24 +207,26 @@ class AlunoControllerIntegrationTest {
                 .andExpect(status().isBadRequest());
     }
     
-//    @Test
-//    @DisplayName("GET /api/alunos?concluido=true - Deve filtrar alunos concluídos")
-//    void deveFiltrarAlunosConcluidos() throws Exception {
-//        // Arrange
-//        Aluno aluno1 = Aluno.criar(NomeAluno.criar("João Silva"), RegistroAcademico.criar("12345"));
-//        Aluno aluno2 = Aluno.criar(NomeAluno.criar("Maria Santos"), RegistroAcademico.criar("67890"));
-//        aluno1 = alunoRepository.salvar(aluno1);
-//        aluno2 = alunoRepository.salvar(aluno2);
-//
-//        // Concluir apenas o primeiro
-//        aluno1.concluirCurso(com.devops.projeto_ac2.domain.valueobjects.MediaFinal.criar(8.0));
-//        alunoRepository.salvar(aluno1);
-//
-//        // Act & Assert
-//        mockMvc.perform(get("/api/alunos?concluido=true"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$").isArray())
-//                .andExpect(jsonPath("$.length()").value(1))
-//                .andExpect(jsonPath("$[0].concluiu").value(true));
-//    }
+    @Test
+    @DisplayName("GET /api/alunos?concluido=true - Deve filtrar alunos concluídos")
+    void deveFiltrarAlunosConcluidos() throws Exception {
+        // Arrange
+        Aluno aluno1 = Aluno.criar(NomeAluno.criar("João Silva"), RegistroAcademico.criar("12345"));
+        Aluno aluno2 = Aluno.criar(NomeAluno.criar("Maria Santos"), RegistroAcademico.criar("67890"));
+        aluno1 = alunoRepository.salvar(aluno1);
+        aluno2 = alunoRepository.salvar(aluno2);
+
+        // Concluir apenas o primeiro
+        MediaFinal media = com.devops.projeto_ac2.domain.valueobjects.MediaFinal.criar(8.0);
+        aluno1.registrarTentativa(media);
+        aluno1.concluirCurso(media);
+        alunoRepository.salvar(aluno1);
+
+        // Act & Assert
+        mockMvc.perform(get("/api/alunos?concluido=true"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].concluiu").value(true));
+    }
 }

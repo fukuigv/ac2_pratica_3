@@ -3,6 +3,7 @@ package com.devops.projeto_ac2.application.usecases;
 import com.devops.projeto_ac2.domain.entities.Aluno;
 import com.devops.projeto_ac2.domain.exceptions.AlunoNotFoundException;
 import com.devops.projeto_ac2.domain.repositories.AlunoRepository;
+import com.devops.projeto_ac2.domain.valueobjects.MediaFinal;
 import com.devops.projeto_ac2.domain.valueobjects.NomeAluno;
 import com.devops.projeto_ac2.domain.valueobjects.RegistroAcademico;
 import org.junit.jupiter.api.DisplayName;
@@ -31,54 +32,58 @@ class ConcluirCursoUseCaseTest {
     @InjectMocks
     private ConcluirCursoUseCase useCase;
     
-//    @Test
-//    @DisplayName("Deve concluir curso com sucesso e adicionar cursos extras quando aprovado")
-//    void deveConcluirCursoComSucessoQuandoAprovado() {
-//        // Arrange
-//        Long alunoId = 1L;
-//        double mediaFinal = 8.5;
-//
-//        Aluno aluno = criarAlunoTeste(alunoId);
-//
-//        when(alunoRepository.buscarPorId(alunoId)).thenReturn(Optional.of(aluno));
-//        when(alunoRepository.salvar(any(Aluno.class))).thenAnswer(invocation -> invocation.getArgument(0));
-//
-//        // Act
-//        Aluno resultado = useCase.executar(alunoId, mediaFinal);
-//
-//        // Assert
-//        assertThat(resultado.isConcluiu()).isTrue();
-//        assertThat(resultado.getMediaFinal()).isEqualTo(8.5);
-//        assertThat(resultado.getCursosAdicionais()).isEqualTo(3);
-//        assertThat(resultado.getDataConclusao()).isNotNull();
-//
-//        verify(alunoRepository, times(1)).buscarPorId(alunoId);
-//        verify(alunoRepository, times(1)).salvar(aluno);
-//    }
+    @Test
+    @DisplayName("Deve concluir curso com sucesso e adicionar cursos extras quando aprovado")
+    void deveConcluirCursoComSucessoQuandoAprovado() {
+        // Arrange
+        Long alunoId = 1L;
+        double mediaFinal = 8.5;
+
+        Aluno aluno = criarAlunoTeste(alunoId);
+
+        aluno.registrarTentativa(MediaFinal.criar(mediaFinal));
+
+        when(alunoRepository.buscarPorId(alunoId)).thenReturn(Optional.of(aluno));
+        when(alunoRepository.salvar(any(Aluno.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Act
+        Aluno resultado = useCase.executar(alunoId, mediaFinal);
+
+        // Assert
+        assertThat(resultado.isConcluiu()).isTrue();
+        assertThat(resultado.getMediaFinal()).isEqualTo(8.5);
+        assertThat(resultado.getCursosAdicionais()).isEqualTo(3);
+        assertThat(resultado.getDataConclusao()).isNotNull();
+
+        verify(alunoRepository, times(1)).buscarPorId(alunoId);
+        verify(alunoRepository, times(1)).salvar(aluno);
+    }
     
-//    @Test
-//    @DisplayName("Deve concluir curso sem adicionar cursos extras quando reprovado")
-//    void deveConcluirCursoSemCursosExtrasQuandoReprovado() {
-//        // Arrange
-//        Long alunoId = 1L;
-//        double mediaFinal = 4.0;
-//
-//        Aluno aluno = criarAlunoTeste(alunoId);
-//
-//        when(alunoRepository.buscarPorId(alunoId)).thenReturn(Optional.of(aluno));
-//        when(alunoRepository.salvar(any(Aluno.class))).thenAnswer(invocation -> invocation.getArgument(0));
-//
-//        // Act
-//        Aluno resultado = useCase.executar(alunoId, mediaFinal);
-//
-//        // Assert
-//        assertThat(resultado.isConcluiu()).isTrue();
-//        assertThat(resultado.getMediaFinal()).isEqualTo(4.0);
-//        assertThat(resultado.getCursosAdicionais()).isEqualTo(0);
-//
-//        verify(alunoRepository, times(1)).buscarPorId(alunoId);
-//        verify(alunoRepository, times(1)).salvar(aluno);
-//    }
+    @Test
+    @DisplayName("Deve concluir curso sem adicionar cursos extras quando reprovado")
+    void deveConcluirCursoSemCursosExtrasQuandoReprovado() {
+        // Arrange
+        Long alunoId = 1L;
+        double mediaFinal = 4.0;
+
+        Aluno aluno = criarAlunoTeste(alunoId);
+
+        aluno.registrarTentativa(MediaFinal.criar(mediaFinal));
+
+        when(alunoRepository.buscarPorId(alunoId)).thenReturn(Optional.of(aluno));
+        when(alunoRepository.salvar(any(Aluno.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Act
+        Aluno resultado = useCase.executar(alunoId, mediaFinal);
+
+        // Assert
+        assertThat(resultado.isConcluiu()).isTrue();
+        assertThat(resultado.getMediaFinal()).isEqualTo(4.0);
+        assertThat(resultado.getCursosAdicionais()).isEqualTo(0);
+
+        verify(alunoRepository, times(1)).buscarPorId(alunoId);
+        verify(alunoRepository, times(1)).salvar(aluno);
+    }
     
     @Test
     @DisplayName("Deve lançar exceção quando aluno não existe")

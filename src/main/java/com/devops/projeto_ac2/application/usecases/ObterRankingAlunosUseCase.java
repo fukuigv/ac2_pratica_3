@@ -31,11 +31,12 @@ public class ObterRankingAlunosUseCase {
      */
     public List<Aluno> executar() {
         return alunoRepository.buscarTodos().stream()
-                .sorted(Comparator
-                        .comparingDouble(Aluno::getMediaFinal).reversed()
-                        .thenComparingInt(Aluno::getCursosAdicionais).reversed())
-                .collect(Collectors.toList());
+                .sorted(
+                        Comparator.comparingDouble(Aluno::getMediaFinal).reversed()
+                        .thenComparing(Comparator.comparingInt(Aluno::getCursosAdicionais).reversed()))
+                        .collect(Collectors.toList());
     }
+
     
     /**
      * Retorna apenas o top N alunos
@@ -47,11 +48,10 @@ public class ObterRankingAlunosUseCase {
         if (limite <= 0) {
             throw new IllegalArgumentException("Limite deve ser maior que zero");
         }
-        
+
         return alunoRepository.buscarTodos().stream()
-                .sorted(Comparator
-                        .comparingDouble(Aluno::getMediaFinal).reversed()
-                        .thenComparingInt(Aluno::getCursosAdicionais).reversed())
+                .sorted(Comparator.comparingDouble(Aluno::getMediaFinal).reversed()
+                        .thenComparing(Comparator.comparingInt(Aluno::getCursosAdicionais).reversed()))
                 .limit(limite)
                 .collect(Collectors.toList());
     }
@@ -62,9 +62,8 @@ public class ObterRankingAlunosUseCase {
     public List<Aluno> executarAprovados() {
         return alunoRepository.buscarConcluidos().stream()
                 .filter(Aluno::aprovado)
-                .sorted(Comparator
-                        .comparingDouble(Aluno::getMediaFinal).reversed()
-                        .thenComparingInt(Aluno::getCursosAdicionais).reversed())
+                .sorted(Comparator.comparingDouble(Aluno::getMediaFinal).reversed()
+                        .thenComparing(Comparator.comparingInt(Aluno::getCursosAdicionais).reversed()))
                 .collect(Collectors.toList());
     }
 }
