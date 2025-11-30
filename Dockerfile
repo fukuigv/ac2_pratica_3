@@ -6,6 +6,8 @@ WORKDIR /af_app
 # Copy the JAR file into the container at /educacaoGamificada
 COPY target/*.jar af_app.jar
 
+RUN apk update && apk upgrade --no-cache
+
 RUN addgroup -S spring && adduser -S spring -G spring
 USER spring
 # Expose the port that your application will run on
