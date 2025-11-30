@@ -1,13 +1,15 @@
-FROM eclipse-temurin:21-jdk
+FROM eclipse-temurin:21-jre-alpine
 
 # Set the working directory in the container
-WORKDIR /ac2_ca
+WORKDIR /af_app
 
 # Copy the JAR file into the container at /educacaoGamificada
-COPY target/*.jar /ac2_ca/ac2_ca-0.0.1-SNAPSHOT.jar
+COPY target/*.jar af_app.jar
 
+RUN addgroup -S spring && adduser -S spring -G spring
+USER spring
 # Expose the port that your application will run on
 EXPOSE 8585
 
 # Specify the command to run on container start
-CMD ["java", "-jar", "ac2_ca-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "af_app.jar"]

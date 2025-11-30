@@ -8,6 +8,19 @@ pipeline {
       }
     }
 
+  stage (' Security Scan - Image (Trivy ) ') {
+    steps {
+    bat '''
+    trivy image -- exit -code 1 -- severity HIGH, CRITICAL ^
+    -- format table -- output trivy -stage-image -report . txt
+    fukuigv/af_app:latest
+    '''
+    archiveArtifacts artifacts : 'trivy -stage-image -report . txt'
+    onlyIfSuccessful : false
+    }
+}
+
+
     stage('Start container') {
       steps {
         echo 'Starting container from Docker Hub...'
