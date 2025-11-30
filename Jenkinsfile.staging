@@ -15,7 +15,14 @@ pipeline {
                 --format table --output trivy-report.txt ^
                 fukuigv/af_app:latest
                 '''
-                archiveArtifacts artifacts: 'trivy-report.txt', onlyIfSuccessful: false
+            }
+            
+            post {
+                always {
+                    archiveArtifacts artifacts: 'trivy-report.txt', onlyIfSuccessful: false
+                    
+                    bat 'type trivy-report.txt'
+                }
             }
         }
 
